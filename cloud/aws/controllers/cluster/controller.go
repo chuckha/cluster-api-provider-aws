@@ -19,6 +19,7 @@ package cluster
 import (
 	"os"
 
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/golang/glog"
 	"github.com/kubernetes-incubator/apiserver-builder/pkg/controller"
 	corev1 "k8s.io/api/core/v1"
@@ -31,7 +32,6 @@ import (
 	"k8s.io/client-go/tools/leaderelection"
 	"k8s.io/client-go/tools/leaderelection/resourcelock"
 	"k8s.io/client-go/tools/record"
-	"sigs.k8s.io/cluster-api/pkg/client/clientset_generated/clientset"
 	clusterapiclientsetscheme "sigs.k8s.io/cluster-api/pkg/client/clientset_generated/clientset/scheme"
 	"sigs.k8s.io/cluster-api/pkg/controller/cluster"
 	"sigs.k8s.io/cluster-api/pkg/controller/config"
@@ -39,6 +39,8 @@ import (
 
 	clusteractuator "sigs.k8s.io/cluster-api-provider-aws/cloud/aws/actuators/cluster"
 	"sigs.k8s.io/cluster-api-provider-aws/cloud/aws/controllers/cluster/options"
+	"sigs.k8s.io/cluster-api-provider-aws/cloud/aws/providerconfig/v1alpha1"
+	ec2svc "sigs.k8s.io/cluster-api-provider-aws/cloud/aws/services/ec2"
 )
 
 const (
@@ -51,13 +53,24 @@ func Start(server *options.Server, shutdown <-chan struct{}) {
 		glog.Fatalf("Could not create Config for talking to the apiserver: %v", err)
 	}
 
-	client, err := clientset.NewForConfig(config)
+	// client, err := clientset.NewForConfig(config)
+	// if err != nil {
+	// 	glog.Fatalf("Could not create client for talking to the apiserver: %v", err)
+	// }
+	codec, err := v1alpha1.NewCodec()
 	if err != nil {
-		glog.Fatalf("Could not create client for talking to the apiserver: %v", err)
+		glog.Fatalf("Could not create codec: %v", err)
 	}
 
+	ec2Client := &ec2.EC2{}
+
 	params := clusteractuator.ActuatorParams{
-		ClusterClient: client.ClusterV1alpha1().Clusters(corev1.NamespaceDefault),
+		Codec:         codec,
+		ClusterClient: nil, // unused right now
+		EC2Service: &ec2svc.Service{
+			Instances: ec2Client,
+			VPCs:      ec2Client,
+		},
 	}
 	actuator, err := clusteractuator.NewActuator(params)
 	if err != nil {
