@@ -19,6 +19,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+GOPATH=$(go env GOPATH)
 WORKINGDIR=$(pwd)
 EXPECTEDDIR="${GOPATH}/src/sigs.k8s.io/cluster-api-provider-aws"
 
