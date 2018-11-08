@@ -80,6 +80,7 @@ aws ec2 create-key-pair --key-name cluster-api-provider-aws.sigs.k8s.io | jq .Ke
 -----END RSA PRIVATE KEY-----
 ```
 </details>
+
 <details><summary>*PowerShell:*</summary>
 
 ```powershell
@@ -104,6 +105,7 @@ aws ssm put-parameter --name "/sigs.k8s.io/cluster-api-provider-aws/ssh-key" \
 }
 ```
 </details>
+
 <details><summary>*PowerShell:*</summary>
 
 ```powershell
@@ -124,6 +126,7 @@ aws ec2 import-key-pair --key-name cluster-api-provider-aws.sigs.k8s.io \
   --public-key-material $(cat ~/.ssh/id_rsa.pub)
 ```
 </details>
+
 <details><summary>*PowerShell:*</summary>
 
 ```powershell
@@ -132,6 +135,7 @@ $publicKey = [System.Convert]::ToBase64String( `
 Import-EC2KeyPair -KeyName cluster-api-provider-aws.sigs.k8s.io -PublicKeyMaterial $publicKey
 ```
 </details>
+
 **NOTE**:
 > Only RSA keys are supported by AWS.
 
@@ -171,6 +175,7 @@ export AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 export SSH_KEY_NAME="cluster-api-provider-aws.sigs.k8s.io"
 ```
 </details>
+
 <details><summary>*PowerShell:*</summary>
 
 ```powershell
@@ -180,6 +185,7 @@ $ENV:AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 $ENV:SSH_KEY_NAME="cluster-api-provider-aws.sigs.k8s.io"
 ```
 </details>
+
 If you applied the CloudFormation template above, an IAM user was created for you:
 
 <details><summary>*Bash:*</summary>
@@ -200,6 +206,7 @@ $ENV:AWS_ACCESS_KEY_ID=$awsCredentials.AccessKeyId
 $ENV:AWS_SECRET_ACCESS_KEY=$awsCredentials.SecretAccessKey
 ```
 </details>
+
 **NOTE**:
 > To save credentials securely in your environment, [aws-vault][aws-vault] uses the OS keystore as permanent storage,
 > and offers shell features to securely expose and setup local AWS environments.
@@ -245,6 +252,7 @@ I1018 01:21:12.517722   16367 clusterdeployer.go:118] Creating cluster object aw
 I1018 01:21:12.524912   16367 clusterdeployer.go:123] Creating master  in namespace "aws-provider-system"
 ```
 </details>
+
 <details><summary>*PowerShell:*</summary>
 
 ```powershell
@@ -260,6 +268,7 @@ I1018 01:21:12.106901   16367 clusterdeployer.go:300] Applying Cluster API Provi
 ...
 ```
 </details>
+
 ## Troubleshooting
 
 Controller logs can be tailed using [`kubectl`][kubectl]:
@@ -270,6 +279,7 @@ Controller logs can be tailed using [`kubectl`][kubectl]:
 kubectl get po -o name -n aws-provider-system | grep aws-provider-controller-manager | xargs kubectl logs -n aws-provider-system -c manager -f
 ```
 </details>
+
 <details><summary>*PowerShell:*</summary>
 
 ```powershell
@@ -277,6 +287,7 @@ kubectl logs -n aws-provider-system -c manager -f `
   $(kubectl get po -o name | Select-String -Pattern "aws-provider-controller-manager")
 ```
 </details>
+
 <!-- References -->
 
 [brew]: https://brew.sh/
