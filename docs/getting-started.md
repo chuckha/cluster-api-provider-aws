@@ -70,7 +70,7 @@ You will need to specify the name of an existing SSH key pair within the region 
 
 #### Create a new key pair
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 # Save the output to a secure location
@@ -79,8 +79,8 @@ aws ec2 create-key-pair --key-name cluster-api-provider-aws.sigs.k8s.io | jq .Ke
 [... contents omitted ...]
 -----END RSA PRIVATE KEY-----
 ```
-
-*PowerShell:*
+</details>
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 (New-EC2KeyPair -KeyName cluster-api-provider-aws.sigs.k8s.io).KeyMaterial
@@ -88,11 +88,12 @@ aws ec2 create-key-pair --key-name cluster-api-provider-aws.sigs.k8s.io | jq .Ke
 [... contents omitted ...]
 -----END RSA PRIVATE KEY-----
 ```
+</details>
 
 If you want to save the private key directly into AWS Systems Manager Parameter
 Store with KMS encryption for security, you can use the following command:
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 aws ssm put-parameter --name "/sigs.k8s.io/cluster-api-provider-aws/ssh-key" \
@@ -102,8 +103,8 @@ aws ssm put-parameter --name "/sigs.k8s.io/cluster-api-provider-aws/ssh-key" \
 "Version": 1
 }
 ```
-
-*PowerShell:*
+</details>
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 Write-SSMParameter -Name "/sigs.k8s.io/cluster-api-provider-aws/ssh-key" `
@@ -111,25 +112,26 @@ Write-SSMParameter -Name "/sigs.k8s.io/cluster-api-provider-aws/ssh-key" `
   -Value (New-EC2KeyPair -KeyName cluster-api-provider-aws.sigs.k8s.io).KeyMaterial
 1
 ```
+</details>
 
 #### Using an existing key
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 # Replace with your own public key
 aws ec2 import-key-pair --key-name cluster-api-provider-aws.sigs.k8s.io \
   --public-key-material $(cat ~/.ssh/id_rsa.pub)
 ```
-
-*PowerShell:*
+</details>
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 $publicKey = [System.Convert]::ToBase64String( `
   [System.Text.Encoding]::UTF8.GetBytes(((get-content ~/.ssh/id_rsa.pub))))
 Import-EC2KeyPair -KeyName cluster-api-provider-aws.sigs.k8s.io -PublicKeyMaterial $publicKey
 ```
-
+</details>
 **NOTE**:
 > Only RSA keys are supported by AWS.
 
@@ -155,7 +157,7 @@ minikube config set bootstrapper kubeadm
 The current iteration of the Cluster API Provider AWS relies on credentials being present in your environment.
 These then get written into the cluster manifests for use by the controllers.
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 # Region used to deploy the cluster in.
@@ -168,8 +170,8 @@ export AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 # SSH Key to be used to run instances.
 export SSH_KEY_NAME="cluster-api-provider-aws.sigs.k8s.io"
 ```
-
-*PowerShell:*
+</details>
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 $ENV:AWS_REGION = "us-east-1"
@@ -177,10 +179,10 @@ $ENV:AWS_ACCESS_KEY_ID="AKIAIOSFODNN7EXAMPLE"
 $ENV:AWS_SECRET_ACCESS_KEY="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 $ENV:SSH_KEY_NAME="cluster-api-provider-aws.sigs.k8s.io"
 ```
-
+</details>
 If you applied the CloudFormation template above, an IAM user was created for you:
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 export AWS_CREDENTIALS=$(aws iam create-access-key \
@@ -188,15 +190,16 @@ export AWS_CREDENTIALS=$(aws iam create-access-key \
 export AWS_ACCESS_KEY_ID=$(echo $AWS_CREDENTIALS | jq .AccessKey.AccessKeyId -r)
 export AWS_SECRET_ACCESS_KEY=$(echo $AWS_CREDENTIALS | jq .AccessKey.SecretAccessKey -r)
 ```
+</details>
 
-*PowerShell:*
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 $awsCredentials = New-IAMAccessKey -UserName bootstrapper.cluster-api-provider-aws.sigs.k8s.io
 $ENV:AWS_ACCESS_KEY_ID=$awsCredentials.AccessKeyId
 $ENV:AWS_SECRET_ACCESS_KEY=$awsCredentials.SecretAccessKey
 ```
-
+</details>
 **NOTE**:
 > To save credentials securely in your environment, [aws-vault][aws-vault] uses the OS keystore as permanent storage,
 > and offers shell features to securely expose and setup local AWS environments.
@@ -222,7 +225,7 @@ in the [terminal session] you're working in.
 
 You can now start the Cluster API controllers and deploy a new cluster in AWS:
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 clusterctl create cluster -v2 --provider aws \
@@ -241,8 +244,8 @@ I1018 01:21:12.517706   16367 clusterdeployer.go:116] Provisioning target cluste
 I1018 01:21:12.517722   16367 clusterdeployer.go:118] Creating cluster object aws-provider-test1 on bootstrap cluster in namespace "aws-provider-system"
 I1018 01:21:12.524912   16367 clusterdeployer.go:123] Creating master  in namespace "aws-provider-system"
 ```
-
-*PowerShell:*
+</details>
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 clusterctl create cluster -v2 --provider aws `
@@ -256,24 +259,24 @@ I1018 01:21:12.106882   16367 clusterdeployer.go:111] Applying Cluster API stack
 I1018 01:21:12.106901   16367 clusterdeployer.go:300] Applying Cluster API Provider Components
 ...
 ```
-
+</details>
 ## Troubleshooting
 
 Controller logs can be tailed using [`kubectl`][kubectl]:
 
-*Bash:*
+<details><summary>*Bash:*</summary>
 
 ```bash
 kubectl get po -o name -n aws-provider-system | grep aws-provider-controller-manager | xargs kubectl logs -n aws-provider-system -c manager -f
 ```
-
-*PowerShell:*
+</details>
+<details><summary>*PowerShell:*</summary>
 
 ```powershell
 kubectl logs -n aws-provider-system -c manager -f `
   $(kubectl get po -o name | Select-String -Pattern "aws-provider-controller-manager")
 ```
-
+</details>
 <!-- References -->
 
 [brew]: https://brew.sh/
