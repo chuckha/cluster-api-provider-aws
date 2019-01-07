@@ -134,12 +134,12 @@
   revision = "c65c006176ff7ff98bb916961c7abbc6b0afc0aa"
 
 [[projects]]
-  digest = "1:b60efdeb75d3c0ceed88783ac2495256aba3491a537d0f31401202579fd62a94"
+  branch = "master"
+  digest = "1:50e55a294ad37fd28b1648d8dffd827327f955b0f03fb97f67a946f0b4b07d83"
   name = "github.com/golang/mock"
   packages = ["gomock"]
   pruneopts = "UT"
-  revision = "51421b967af1f557f93a59e0057aaf15ca02e29c"
-  version = "v1.2.0"
+  revision = "e698a2ea17fee71b248fc2bba82fc544c2017f93"
 
 [[projects]]
   digest = "1:4c0989ca0bcd10799064318923b9bc2db6b4d6338dd75f3f2d86c3511aaaf5cf"
@@ -994,7 +994,7 @@
   revision = "8a16e7dd8fb6d97d1331b0c79a16722f934b00b1"
 
 [[projects]]
-  digest = "1:295ceb2d5af91a526eb14578f725fa1860d010aa1a331bba7c75678dd33beedc"
+  digest = "1:02c5b248c6334c196178b9e65a7dc3b1b785e7110f8489d5879dec390bd25e96"
   name = "sigs.k8s.io/cluster-api"
   packages = [
     "cmd/clusterctl/clientcmd",
@@ -1019,7 +1019,7 @@
     "pkg/controller/noderefutil",
     "pkg/util",
   ]
-  pruneopts = "T"
+  pruneopts = "UT"
   revision = "25f6ea40d99f1ea8f4812ab6e5cc9fd8db6db699"
 
 [[projects]]

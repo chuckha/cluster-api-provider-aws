@@ -33,98 +33,22 @@ required = [
     "github.com/json-iterator/go",
 ]
 
-[[override]]
-  name = "gopkg.in/fsnotify.v1"
-  source = "https://github.com/fsnotify/fsnotify.git"
-
 [[constraint]]
-  name = "github.com/aws/aws-sdk-go"
-  version = "1.16.14"
+  name = "github.com/golang/mock"
+  branch = "master"
 
 [[constraint]]
   name = "github.com/awslabs/goformation"
   version = "1.2.2"
 
 [[constraint]]
-  name = "github.com/golang/mock"
-  version = "1.2.0"
-
-[[constraint]]
-  name = "github.com/onsi/ginkgo"
-  version = "1.7.0"
-
-[[constraint]]
-  name = "github.com/onsi/gomega"
-  version = "1.4.3"
-
-[[constraint]]
-  name = "github.com/pkg/errors"
-  version = "0.8.1"
-
-[[constraint]]
-  name = "github.com/spf13/cobra"
-  version = "0.0.3"
-
-[[constraint]]
-  name = "github.com/spf13/pflag"
-  version = "1.0.3"
-
-[[constraint]]
-  branch = "master"
-  name = "golang.org/x/net"
-
-[[constraint]]
-  name = "k8s.io/api"
-  version = "kubernetes-1.12.3"
-
-[[override]]
-  name = "k8s.io/apiserver"
-  version = "kubernetes-1.12.3"
-
-[[constraint]]
-  name = "k8s.io/apimachinery"
-  version = "kubernetes-1.12.3"
-
-[[constraint]]
-  name = "k8s.io/client-go"
-  version = "kubernetes-1.12.3"
-
-[[constraint]]
-  branch = "master"
-  name = "k8s.io/cluster-bootstrap"
-
-[[constraint]]
-  name = "k8s.io/klog"
-  version = "0.1.0"
-
-[[constraint]]
-  name = "k8s.io/kubernetes"
-  version = "1.12.4"
-
-[[constraint]]
   name = "sigs.k8s.io/cluster-api"
   revision = "25f6ea40d99f1ea8f4812ab6e5cc9fd8db6db699"
 
-[[constraint]]
-  name="sigs.k8s.io/controller-runtime"
-  version="v0.1.1"
-
-[[constraint]]
-  name="sigs.k8s.io/controller-tools"
-  version="v0.1.1"
-
-[[constraint]]
-  name = "sigs.k8s.io/yaml"
-  version = "1.1.0"
-
 [[override]]
-  name = "github.com/json-iterator/go"
-  version = "1.1.5"
+  name = "gopkg.in/fsnotify.v1"
+  source = "https://github.com/fsnotify/fsnotify.git"
 
 [prune]
   go-tests = true
   unused-packages = true
-
-[[prune.project]]
-  name = "sigs.k8s.io/cluster-api"
-  unused-packages = false
