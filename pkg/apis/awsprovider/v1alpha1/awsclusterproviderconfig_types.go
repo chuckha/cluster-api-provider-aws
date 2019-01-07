@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1alpha3"
 )
 
 // +genclient
@@ -41,6 +42,8 @@ type AWSClusterProviderSpec struct {
 
 	// CAPrivateKey is a PEM encoded PKCS1 CA PrivateKey for the control plane nodes.
 	CAPrivateKey []byte `json:"caKey,omitempty"`
+
+	Config *v1alpha3.InitConfiguration
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

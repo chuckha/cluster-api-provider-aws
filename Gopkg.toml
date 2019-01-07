@@ -1,6 +1,6 @@
 # Gopkg.toml example
 #
-# Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
+# Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
 # for detailed Gopkg.toml documentation.
 #
 # required = ["github.com/user/thing/cmd/thing"]
@@ -25,43 +25,106 @@
 #   unused-packages = true
 
 required = [
-    "github.com/emicklei/go-restful",
     "github.com/onsi/ginkgo", # for test framework
     "github.com/onsi/gomega", # for test matchers
     "k8s.io/code-generator/cmd/deepcopy-gen", # for go generate
     "sigs.k8s.io/controller-tools/cmd/controller-gen", # for crd/rbac generation
-    "sigs.k8s.io/controller-runtime/pkg/client/config",
-    "sigs.k8s.io/controller-runtime/pkg/controller",
-    "sigs.k8s.io/controller-runtime/pkg/handler",
-    "sigs.k8s.io/controller-runtime/pkg/manager",
-    "sigs.k8s.io/controller-runtime/pkg/runtime/signals",
-    "sigs.k8s.io/controller-runtime/pkg/source",
     "sigs.k8s.io/testing_frameworks/integration", # for integration testing
-    "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1",
+    "github.com/json-iterator/go",
 ]
 
+[[override]]
+  name = "gopkg.in/fsnotify.v1"
+  source = "https://github.com/fsnotify/fsnotify.git"
+
 [[constraint]]
-  name = "github.com/golang/mock"
-  branch = "master"
+  name = "github.com/aws/aws-sdk-go"
+  version = "1.16.14"
 
 [[constraint]]
   name = "github.com/awslabs/goformation"
   version = "1.2.2"
 
 [[constraint]]
-  name = "sigs.k8s.io/cluster-api"
-  revision = "f03f47c17d09c4765a1bfdd204f8d814196cb3d8"
+  name = "github.com/golang/mock"
+  version = "1.2.0"
 
-# For dependency below: Refer to issue https://github.com/golang/dep/issues/1799
+[[constraint]]
+  name = "github.com/onsi/ginkgo"
+  version = "1.7.0"
+
+[[constraint]]
+  name = "github.com/onsi/gomega"
+  version = "1.4.3"
+
+[[constraint]]
+  name = "github.com/pkg/errors"
+  version = "0.8.1"
+
+[[constraint]]
+  name = "github.com/spf13/cobra"
+  version = "0.0.3"
+
+[[constraint]]
+  name = "github.com/spf13/pflag"
+  version = "1.0.3"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/net"
+
+[[constraint]]
+  name = "k8s.io/api"
+  version = "kubernetes-1.12.3"
+
 [[override]]
-name = "gopkg.in/fsnotify.v1"
-source = "https://github.com/fsnotify/fsnotify.git"
-version="v1.4.7"
+  name = "k8s.io/apiserver"
+  version = "kubernetes-1.12.3"
+
+[[constraint]]
+  name = "k8s.io/apimachinery"
+  version = "kubernetes-1.12.3"
+
+[[constraint]]
+  name = "k8s.io/client-go"
+  version = "kubernetes-1.12.3"
+
+[[constraint]]
+  branch = "master"
+  name = "k8s.io/cluster-bootstrap"
+
+[[constraint]]
+  name = "k8s.io/klog"
+  version = "0.1.0"
+
+[[constraint]]
+  name = "k8s.io/kubernetes"
+  version = "1.12.4"
+
+[[constraint]]
+  name = "sigs.k8s.io/cluster-api"
+  revision = "25f6ea40d99f1ea8f4812ab6e5cc9fd8db6db699"
+
+[[constraint]]
+  name="sigs.k8s.io/controller-runtime"
+  version="v0.1.1"
+
+[[constraint]]
+  name="sigs.k8s.io/controller-tools"
+  version="v0.1.1"
+
+[[constraint]]
+  name = "sigs.k8s.io/yaml"
+  version = "1.1.0"
+
+[[override]]
+  name = "github.com/json-iterator/go"
+  version = "1.1.5"
 
 [prune]
   go-tests = true
   unused-packages = true
 
-  [[prune.project]]
+[[prune.project]]
   name = "sigs.k8s.io/cluster-api"
   unused-packages = false
