@@ -199,12 +199,12 @@ type runner struct {
 // TODO sha512 the artifacts!
 
 func (r runner) run() error {
-	fmt.Print("tagging repository ")
+	fmt.Printf("tagging repository %q ", r.config.version)
 	if err := r.tagger.tag(r.config.version); err != nil {
 		return err
 	}
 	fmt.Println("🐲")
-	fmt.Print("checking out tag ")
+	fmt.Printf("checking out tag %q ", r.config.version)
 	if err := r.tagger.checkout(r.config.version); err != nil {
 		return err
 	}
@@ -214,12 +214,12 @@ func (r runner) run() error {
 		return err
 	}
 	fmt.Println("🐲")
-	fmt.Print("pushing tag ")
+	fmt.Printf("pushing tag %q ", r.config.version)
 	if err := r.tagger.pushTag(r.config.version); err != nil {
 		return err
 	}
 	fmt.Println("🐲")
-	fmt.Print("drafting a release ")
+	fmt.Printf("drafting a release for tag %q ", r.config.version)
 	if err := r.releaser.draft(r.config.version); err != nil {
 		return err
 	}
@@ -333,8 +333,6 @@ func (m makebuilder) build() error {
 		fmt.Sprintf("REGISTRY=%v/%v", m.registry, m.imageName),
 		fmt.Sprintf("PULL_POLICY=%v", m.pullPolicy))
 	out, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(string(out))
-	}
+	fmt.Println(string(out))
 	return err
 }
