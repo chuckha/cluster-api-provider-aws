@@ -73,6 +73,7 @@ func main() {
 	}
 
 	run := &runner{
+		builder: makebuilder{},
 		releaser: gothubReleaser{
 			artifactsDir: cfg.artifactDir,
 			user:         user,
@@ -179,14 +180,27 @@ type config struct {
 }
 
 type runner struct {
+	builder  builder
 	releaser releaser
 	tagger   tagger
 	config   config
 }
 
+// TODO sha512 the artifacts!
+
 func (r runner) run() error {
 	fmt.Print("tagging repository ")
 	if err := r.tagger.tag(r.config.version); err != nil {
+		return err
+	}
+	fmt.Println("🐲")
+	fmt.Print("checking out tag ")
+	if err := r.tagger.checkout(r.config.version); err != nil {
+		return err
+	}
+	fmt.Println("🐲")
+	fmt.Print("building artifacts ")
+	if err := r.builder.build(); err != nil {
 		return err
 	}
 	fmt.Println("🐲")
@@ -244,6 +258,7 @@ func (g gothubReleaser) upload(version, file string) error {
 type tagger interface {
 	tag(string) error
 	pushTag(string) error
+	checkout(string) error
 }
 
 type git struct {
@@ -266,6 +281,30 @@ func (g git) tag(version string) error {
 func (g git) pushTag(version string) error {
 	// TODO(chuckha): this shouldn't exit if it fails because the tag already
 	cmd := exec.Command("git", "push", g.remote, version)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(string(out))
+	}
+	return err
+}
+
+func (g git) checkout(version string) error {
+	cmd := exec.Command("git", "checkout", version)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(string(out))
+	}
+	return err
+}
+
+type builder interface {
+	build() error
+}
+
+type makebuilder struct{}
+
+func (m makebuilder) build() error {
+	cmd := exec.Command("make", "release-artifacts")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(string(out))
