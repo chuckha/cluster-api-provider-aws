@@ -280,7 +280,7 @@ type git struct {
 }
 
 func (g git) tag(version string) error {
-	// if the tag exists then return nil; if it doesn't creat it
+	// if the tag exists then return nil; if it doesn't create it
 	cmd := exec.Command("git", "rev-parse", "--quiet", "--verify", version)
 	_, err := cmd.CombinedOutput()
 	if err != nil {
