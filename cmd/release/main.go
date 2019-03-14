@@ -38,6 +38,11 @@ github token for modifying release
 const (
 	// TODO(chuckha): figure this out based on directory name
 	repository = "cluster-api-provider-aws"
+
+	// TODO move these into config
+	registry        = "gcr.io"
+	managerImageTag = "0.0.5"
+	pullPolicy      = "IfNotPresent"
 )
 
 func main() {
@@ -73,7 +78,12 @@ func main() {
 	}
 
 	run := &runner{
-		builder: makebuilder{},
+		builder: makebuilder{
+			registry:   registry,
+			imageName:  repository,
+			imageTag:   managerImageTag,
+			pullPolicy: pullPolicy,
+		},
 		releaser: gothubReleaser{
 			artifactsDir: cfg.artifactDir,
 			user:         user,
@@ -270,12 +280,20 @@ type git struct {
 }
 
 func (g git) tag(version string) error {
-	cmd := exec.Command("git", "tag", "-s", "-m", fmt.Sprintf("A release of %q for version %q", g.repository, version), version)
-	out, err := cmd.CombinedOutput()
+	// if the tag exists then return nil; if it doesn't creat it
+	cmd := exec.Command("git", "rev-parse", "--quiet", "--verify", version)
+	_, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println(string(out))
+		// TODO: in go 1.12 use ExitError and ExitCode()
+		// assume this means it doesn't exist
+		cmd = exec.Command("git", "tag", "-s", "-m", fmt.Sprintf("A release of %q for version %q", g.repository, version), version)
+		out, err2 := cmd.CombinedOutput()
+		if err != nil {
+			fmt.Println(string(out))
+		}
+		return err2
 	}
-	return err
+	return nil
 }
 
 func (g git) pushTag(version string) error {
@@ -301,10 +319,19 @@ type builder interface {
 	build() error
 }
 
-type makebuilder struct{}
+type makebuilder struct {
+	registry   string
+	imageName  string
+	imageTag   string
+	pullPolicy string
+}
 
 func (m makebuilder) build() error {
 	cmd := exec.Command("make", "release-artifacts")
+	cmd.Env = append(os.Environ(),
+		fmt.Sprintf("MANAGER_IMAGE_TAG=%v", m.imageTag),
+		fmt.Sprintf("REGISTRY=%v/%v", m.registry, m.imageName),
+		fmt.Sprintf("PULL_POLICY=%v", m.pullPolicy))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(string(out))
