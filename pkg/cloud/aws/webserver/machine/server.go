@@ -8,8 +8,11 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"sigs.k8s.io/cluster-api-provider-aws/pkg/cloud/aws/actuators/machine"
 	clusterv1 "sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
+	"sigs.k8s.io/cluster-api/pkg/client/clientset_generated/clientset"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 )
 
 type Server struct {
@@ -28,10 +31,24 @@ func NewServer() (*Server, error) {
 	ud := cf.UniversalDecoder()
 	mux := http.NewServeMux()
 
+	cfg := config.GetConfigOrDie()
+	coreClient, err := corev1.NewForConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
+	cs, err := clientset.NewForConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
+
 	s := &Server{
 		ServeMux: mux,
-		Actuator: machine.NewActuator(machine.ActuatorParams{}),
-		Decoder:  ud,
+		Actuator: machine.NewActuator(machine.ActuatorParams{
+			CoreClient:     coreClient,
+			ClusterClient:  cs.ClusterV1alpha1(),
+			LoggingContext: "[machine-actuator]",
+		}),
+		Decoder: ud,
 	}
 
 	mux.HandleFunc("/delete", s.Delete)
