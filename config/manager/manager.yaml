@@ -20,6 +20,21 @@ spec:
   ports:
   - port: 443
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cluster-api-provider-aws
+  namespace: aws-provider-system
+spec:
+  ports:
+  - port: 8000
+    name: machine
+  - port: 8001
+    name: cluster
+  selector:
+    control-plane: controller-manager
+    controller-tools.k8s.io: "1.0"
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -55,6 +70,9 @@ spec:
         - name: manager
           image: SET_BY_PATCH
           imagePullPolicy: SET_BY_PATCH
+          ports:
+          - containerPort: 8000
+          - containerPort: 8001
           args:
             - "-v=3"
             - "-logtostderr=true"
