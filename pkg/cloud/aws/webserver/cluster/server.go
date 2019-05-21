@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"k8s.io/klog"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"sigs.k8s.io/cluster-api-provider-aws/pkg/cloud/aws/actuators/cluster"
@@ -25,13 +27,14 @@ func NewServer() (*Server, error) {
 
 	cf := serializer.NewCodecFactory(scheme)
 	ud := cf.UniversalDecoder()
+	mux := http.NewServeMux()
 
 	s := &Server{
+		ServeMux: mux,
 		Actuator: cluster.NewActuator(cluster.ActuatorParams{}),
 		Decoder:  ud,
 	}
 
-	mux := http.NewServeMux()
 	mux.HandleFunc("/reconcile", s.Reconcile)
 	return s, nil
 }
@@ -50,6 +53,8 @@ func (s *Server) Reconcile(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(o, gvk)
 	if err := s.Actuator.Reconcile(c); err != nil {
+		klog.Info(err)
+		klog.Info(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

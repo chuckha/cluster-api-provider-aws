@@ -26,13 +26,14 @@ func NewServer() (*Server, error) {
 
 	cf := serializer.NewCodecFactory(scheme)
 	ud := cf.UniversalDecoder()
+	mux := http.NewServeMux()
 
 	s := &Server{
+		ServeMux: mux,
 		Actuator: machine.NewActuator(machine.ActuatorParams{}),
 		Decoder:  ud,
 	}
 
-	mux := http.NewServeMux()
 	mux.HandleFunc("/delete", s.Delete)
 	mux.HandleFunc("/exists", s.Exists)
 	mux.HandleFunc("/update", s.Update)
