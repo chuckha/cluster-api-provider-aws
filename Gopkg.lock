@@ -1320,7 +1320,6 @@
     "k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1",
     "k8s.io/kubernetes/cmd/kubeadm/app/util",
     "sigs.k8s.io/cluster-api/cmd/clusterctl/cmd",
-    "sigs.k8s.io/cluster-api/pkg/apis",
     "sigs.k8s.io/cluster-api/pkg/apis/cluster/common",
     "sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1",
     "sigs.k8s.io/cluster-api/pkg/client/clientset_generated/clientset",
