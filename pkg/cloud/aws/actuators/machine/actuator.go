@@ -18,7 +18,6 @@ package machine
 
 // should not need to import the ec2 sdk here
 import (
-	"context"
 	"fmt"
 	"strings"
 	"time"
@@ -146,7 +145,7 @@ func (a *Actuator) isNodeJoin(scope *actuators.MachineScope, controlPlaneMachine
 }
 
 // Create creates a machine and is invoked by the machine controller.
-func (a *Actuator) Create(ctx context.Context, cluster *clusterv1.Cluster, machine *clusterv1.Machine) error {
+func (a *Actuator) Create(cluster *clusterv1.Cluster, machine *clusterv1.Machine) error {
 	if cluster == nil {
 		return errors.Errorf("missing cluster for machine %s/%s", machine.Namespace, machine.Name)
 	}
@@ -256,7 +255,7 @@ func (a *Actuator) reconcileLBAttachment(scope *actuators.MachineScope, m *clust
 }
 
 // Delete deletes a machine and is invoked by the Machine Controller
-func (a *Actuator) Delete(ctx context.Context, cluster *clusterv1.Cluster, machine *clusterv1.Machine) error {
+func (a *Actuator) Delete(cluster *clusterv1.Cluster, machine *clusterv1.Machine) error {
 	if cluster == nil {
 		return errors.Errorf("missing cluster for machine %s/%s", machine.Namespace, machine.Name)
 	}
@@ -361,7 +360,7 @@ func (a *Actuator) isMachineOutdated(machineSpec *v1alpha1.AWSMachineProviderSpe
 // Update updates a machine and is invoked by the Machine Controller.
 // If the Update attempts to mutate any immutable state, the method will error
 // and no updates will be performed.
-func (a *Actuator) Update(ctx context.Context, cluster *clusterv1.Cluster, machine *clusterv1.Machine) error {
+func (a *Actuator) Update(cluster *clusterv1.Cluster, machine *clusterv1.Machine) error {
 	if cluster == nil {
 		return errors.Errorf("missing cluster for machine %s/%s", machine.Namespace, machine.Name)
 	}
@@ -417,7 +416,7 @@ func (a *Actuator) Update(ctx context.Context, cluster *clusterv1.Cluster, machi
 }
 
 // Exists test for the existence of a machine and is invoked by the Machine Controller
-func (a *Actuator) Exists(ctx context.Context, cluster *clusterv1.Cluster, machine *clusterv1.Machine) (bool, error) {
+func (a *Actuator) Exists(cluster *clusterv1.Cluster, machine *clusterv1.Machine) (bool, error) {
 	if cluster == nil {
 		return false, errors.Errorf("missing cluster for machine %s/%s", machine.Namespace, machine.Name)
 	}
