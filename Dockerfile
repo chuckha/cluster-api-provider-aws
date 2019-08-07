@@ -13,24 +13,27 @@
 # limitations under the License.
 
 # Build the manager binary
-FROM golang:1.12.6 as builder
+FROM golang:1.12.7
+
+# default the go proxy
+ARG goproxy=https://proxy.golang.org
+
+# run this with docker build --build_arg $(go env GOPROXY) to override the goproxy
+ENV GOPROXY=$goproxy
 
 # Copy in the go src
-WORKDIR ${GOPATH}/src/sigs.k8s.io/cluster-api-provider-aws
-COPY pkg/    pkg/
-COPY cmd/    cmd/
-COPY vendor/ vendor/
+WORKDIR /workspace
 COPY go.mod go.mod
 COPY go.sum go.sum
+RUN go mod download
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux GO111MODULE=on GOFLAGS="-mod=vendor" \
-    go build -a -ldflags '-extldflags "-static"' \
-    -o manager sigs.k8s.io/cluster-api-provider-aws/cmd/manager
+COPY pkg/    pkg/
+COPY cmd/    cmd/
 
-# Copy the controller-manager into a thin image
-FROM gcr.io/distroless/static:latest
-WORKDIR /
-COPY --from=builder /go/src/sigs.k8s.io/cluster-api-provider-aws/manager .
-USER nobody
-ENTRYPOINT ["/manager"]
+COPY third_party/forked/rerun-process-wrapper/start.sh .
+COPY third_party/forked/rerun-process-wrapper/restart.sh .
+
+# Build and run
+RUN go install -v .
+RUN mv /go/bin/manager /manager
+ENTRYPOINT ["./start.sh", "/manager"]
