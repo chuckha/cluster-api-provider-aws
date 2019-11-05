@@ -97,7 +97,7 @@ var _ = Describe("CAPA", func() {
 				cleanupInput := &framework.CleanUpInput{
 					Mgmt:          mgmt,
 					Cluster:       cluster,
-					DeleteTimeout: 5 * time.Minute,
+					DeleteTimeout: 10 * time.Minute,
 				}
 
 				framework.CleanUp(cleanupInput)
