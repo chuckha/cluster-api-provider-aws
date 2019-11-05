@@ -20,7 +20,7 @@ import (
 
 func TestCAPA(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Docker Suite")
+	RunSpecs(t, "CAPA Suite")
 }
 
 var mgmt framework.ManagementCluster
